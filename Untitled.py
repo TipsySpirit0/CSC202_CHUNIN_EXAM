@@ -1,6 +1,7 @@
 import random
 
-def calculate_absorption(sound_level, material):
+def calculate_absorption(sound_level, material, thickness):
+    """Calculates the absorption of sound on multiple materials"""
     # Absorption coefficients for different materials (example values)
     absorption_coefficients = {
         'glass': 0.2,
@@ -9,20 +10,25 @@ def calculate_absorption(sound_level, material):
     }
 
     # Check if the material is valid
-    if material.lower() not in absorption_coefficients:
+    material_lower = material.lower()
+    if material_lower not in absorption_coefficients:
         print("Invalid material!")
         return None
 
     # Get the absorption coefficient for the specified material
-    absorption_coefficient = absorption_coefficients[material.lower()]
+    absorption_coefficient = absorption_coefficients[material_lower]
 
-    # Calculate absorbed sound level
-    absorbed_sound_level = sound_level - (sound_level * absorption_coefficient)
+    # Convert thickness from centimeters to meters
+    thickness_meters = thickness / 100.0
+
+    # Calculate the absorbed sound level using the Sabine formula
+    absorbed_sound_level = sound_level + 10 * absorption_coefficient * thickness_meters
 
     return absorbed_sound_level
 
 
-def calculate_attenuation(sound_level, distance, material):
+def calculate_attenuation(sound_level, distance, material, thickness):
+    """Calculates the attenuation of sound over a certain distance"""
     # Attenuation factor for distance (example value)
     attenuation_factor = 0.1
 
@@ -30,7 +36,7 @@ def calculate_attenuation(sound_level, distance, material):
     distance_attenuation = sound_level - (distance * attenuation_factor)
 
     # Calculate absorbed sound level
-    absorbed_sound_level = calculate_absorption(distance_attenuation, material)
+    absorbed_sound_level = calculate_absorption(distance_attenuation, material, thickness)
 
     return absorbed_sound_level
 
@@ -55,9 +61,12 @@ def main():
 
     # Accept the material
     material = input("Enter the material (glass, wood, or concrete): ")
+    
+    #Accept thickness
+    thickness = float(input("Enter the thickness of the material in centimeters: "))
 
     # Calculate absorbed sound level
-    absorbed_sound_level = calculate_attenuation(sound_level, distance, material)
+    absorbed_sound_level = calculate_attenuation(sound_level, distance, material, thickness)
 
     if absorbed_sound_level is not None:
         # Print the output sound level
@@ -69,3 +78,27 @@ if __name__ == '__main__':
 
 
 # Give estimate of decibel values
+
+
+
+
+# def main():
+#     # Accept input sound level in decibels
+#     sound_level = float(input("Enter the sound level in decibels: "))
+
+#     # Accept the material
+#     material = input("Enter the material (glass, wood, or concrete): ")
+
+#     # Accept the thickness in centimeters
+#     thickness = float(input("Enter the thickness of the material in centimeters: "))
+
+#     # Calculate absorbed sound level
+#     absorbed_sound_level = calculate_absorption(sound_level, material, thickness)
+
+#     if absorbed_sound_level is not None:
+#         # Print the output sound level
+#         print("Output sound level: {:.2f} dB".format(absorbed_sound_level))
+
+
+# if __name__ == '__main__':
+#     main()
